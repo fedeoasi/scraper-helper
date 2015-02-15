@@ -7,8 +7,6 @@ import scala.reflect.runtime.universe._
 import scala.util.control.NonFatal
 
 object ScraperHelper extends Logging {
-  val stackTraceLimit: Int = 20
-
   private[this] val defaultValues = Map(
     typeTag[String] -> "")
 
@@ -23,7 +21,7 @@ object ScraperHelper extends Logging {
           transform(element)
         } catch {
           case NonFatal(e) =>
-            val stackTrace = e.getStackTrace.take(stackTraceLimit).mkString("\n")
+            val stackTrace = e.getStackTrace.mkString("\n")
             logger.error(s"Error while processing url: ${document.baseUri} -- ${e.getMessage} -- $stackTrace")
             getDefault(defaultValue)
         }
@@ -41,7 +39,7 @@ object ScraperHelper extends Logging {
           if (include(element)) Some(transform(element)) else None
         } catch {
           case NonFatal(e) =>
-            val stackTrace = e.getStackTrace.take(stackTraceLimit).mkString("\n")
+            val stackTrace = e.getStackTrace.mkString("\n")
             logger.error(s"Error while processing url: ${document.baseUri} -- ${e.getMessage} -- $stackTrace")
             None
         }
